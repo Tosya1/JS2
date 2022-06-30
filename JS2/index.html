@@ -6,22 +6,41 @@
     <title>eShop</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Flex:regular" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/3e8c25bd64.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@2"></script>
+    <script src="script.js"></script>
 </head>
 
 <body>
-    <header>
-        <div class="search">
-            <input type="text" class="goods-search" />
-            <button class="search-button" type="button">Искать</button>
-        </div>
-        <div class="actions">
-            <button class="cart-button" type="button">Корзина</button>
-        </div>
-    </header>
-    <main>
-        <div class="goods-list"></div>
-    </main>
-    <script src="script.js"></script>
+    <div id="root">
+        <header>
+            <div class="search">
+                <input type="text" class="goods-search" v-model="search" />
+                <!--<button class=" search-button " type="button ">Искать</button>-->
+            </div>
+            <div class="actions ">
+                <button class="cart-button" type="button" @click="changeCartVisibility">Корзина</button>
+                <div class="basket" v-if="isVisibleCart">
+                    <div class="basket-header ">
+                        <div class="close-basket" @click="changeCartVisibility">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    </div>
+                    <div class="basket-body"></div>
+                    <div class="basket-footer">  Всего товаров на сумму  <span>{{ calculatePrice}}</span></div>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="goods-list" v-if="filteredItems.length">
+                <div class=" goods-item " v-for="item in filteredItems">
+                    <h3>{{ item.product_name }}</h3>
+                    <p>{{ item.price }}</p>
+                </div>
+            </div>
+            <div class="no-data" v-else>Нет данных</div>
+        </main>
+    </div>
 </body>
 
 </html>
