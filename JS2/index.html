@@ -28,6 +28,7 @@
                 <good v-for="item in filteredItems" :item="item"></good>
             </div>
             <div class="no-data" v-else>Нет данных</div>
+            <error v-if="isVisibleError" @close="changeErrorVisibility">{{err}}</error>
         </main>
     </div>
 </body>
