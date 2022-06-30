@@ -7,16 +7,30 @@ const goods = [
     { title: 'Shoes', price: 250 },
 ];
 
+const GET_GOOG_ITEMS = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+const GOODS = `${GET_GOOG_ITEMS}/catalogData.json`;
+const GOODS_BASKET = `${GET_GOOG_ITEMS}/getBasket.json`;
+
+function service(url, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    const loadHandler = () => {
+        callback(JSON.parse(xhr.response))
+    }
+    xhr.onload = loadHandler;
+    xhr.send();
+}
+
 class GoodsItem {
-    constructor({ title = '', price = 0 }) {
-        this.title = title;
+    constructor({ product_name = '', price = 0 }) {
+        this.product_name = product_name;
         this.price = price;
     }
 
     render() {
         return `
         <div class="goods-item">
-            <h3>${this.title}</h3>
+            <h3>${this.product_name}</h3>
             <p>${this.price}</p>
         </div>
         `;
@@ -24,16 +38,20 @@ class GoodsItem {
 }
 
 class GoodsList {
-    fetchData() {
-        this.list = goods;
+    items = [];
+    fetchData(callback) {
+        service(GOODS, data => {
+            this.items = data;
+            callback()
+        });
     }
 
     calculatePrice() {
-        return this.list.reduce((acc, item) => acc + item.price, 0);
+        return this.items.reduce((acc, item) => acc + item.price, 0);
     }
 
     render() {
-        const goodsList = this.list.map(item => {
+        const goodsList = this.items.map(item => {
             const goodsItem = new GoodsItem(item);
             return goodsItem.render();
         })
@@ -41,90 +59,27 @@ class GoodsList {
     }
 }
 
-const goodsList = new GoodsList(goods);
-goodsList.fetchData();
-goodsList.render();
-console.log(goodsList.calculatePrice());
-
-//2 Напишите программу, рассчитывающую стоимость и калорийность гамбургера.
-class Hamburger {
-    static sizeSmall = { price: 50, calories: 20 };
-    static sizeBig = { price: 100, calories: 40 };
-    static stuffingfCheese = { price: 10, calories: 20 };
-    static stuffingSalad = { price: 20, calories: 5 };
-    static stuffingPotato = { price: 15, calories: 10 };
-    static toppingSpice = { price: 15, calories: 0 };
-    static toppingMayo = { price: 20, calories: 5 };
-
-    constructor(size, stuffing) {
-        this.size = size;
-        this.stuffing = stuffing;
-        this.topping = [];
-    }
-
-    addTopping(topping) {
-        if (this.topping.includes(topping)) {
-            return;
-        }
-        this.topping.push(topping);
-    }
-
-    removeTopping(topping) {
-        if (!this.topping.includes(topping)) {
-            return;
-        }
-        const index = this.topping.indexOf(topping);
-        this.topping.splice(index, 1);
-    }
-
-    getToppings() {
-        let toppings = [];
-        Object.entries(Hamburger).map(item => {
-            if (this.topping.includes(item[1])) {
-                toppings.push(item[0]);
-            }
+class BasketGoods {
+    items = [];
+    fetchDataBasket(callback = () => {}) {
+        service(GOODS_BASKET, data => {
+            this.items = data;
+            callback()
         });
-        return toppings.join(', ');
-    }
-
-    getSize() {
-        return Object.entries(Hamburger).find(item => item[1] === this.size)[0];
-    }
-
-    getStuffing() {
-        return Object.entries(Hamburger)
-            .find(item => item[1] === this.stuffing)[0];
-    }
-
-    calculatePrice() {
-        return this.size.price + this.stuffing.price
-            + this.topping.reduce((acc, item) => acc + item.price, 0);
-    }
-
-    calculateCalories() {
-        return this.size.calories + this.stuffing.calories
-            + this.topping.reduce((acc, item) => acc + item.calories, 0);
     }
 }
 
+const goodsList = new GoodsList();
+goodsList.fetchData(() => {
+    goodsList.render();
+});
+goodsList.fetchData(() => {
+    console.log(goodsList.calculatePrice());
+});
 
-const hamb = new Hamburger(Hamburger.sizeBig, Hamburger.stuffingfCheese);
+const basketGoods = new BasketGoods();
+basketGoods.fetchDataBasket();
 
-hamb.addTopping(Hamburger.toppingMayo);
-hamb.addTopping(Hamburger.toppingSpice);
-
-console.log(hamb.getToppings());
-console.log(`Стоимость гамбургера ${hamb.calculatePrice()} руб.`);
-console.log(`Калорийность гамбургера ${hamb.calculateCalories()} калорий.`);
-
-hamb.removeTopping(Hamburger.toppingSpice);
-
-console.log(hamb.getSize());
-console.log(hamb.getStuffing());
-console.log(hamb.getToppings());
-console.log(`Стоимость гамбургера ${hamb.calculatePrice()} руб.`);
-console.log(`Калорийность гамбургера ${hamb.calculateCalories()} калорий.`);
-console.log(hamb);
 
 
 
