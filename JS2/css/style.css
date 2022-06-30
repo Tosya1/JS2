@@ -67,7 +67,7 @@ header {
   justify-content: end;
   align-items: center;
 }
-header .cart-button {
+header .cart-button, header .search-button {
   margin-right: 10px;
   background: lightgrey;
   padding: 5px 15px;
@@ -75,12 +75,18 @@ header .cart-button {
   font-size: inherit;
   color: inherit;
 }
+header .cart-button {
+  background-color: #626060;
+  color: lightgrey;
+}
+header .goods-search {
+  padding: 5px 15px;
+  margin-right: 5px;
+}
 
 .goods-list {
-  display: grid;
-  grid-auto-flow: column;
-  gap: 15px;
-  justify-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .goods-item {
@@ -96,4 +102,7 @@ header .cart-button {
 }
 .goods-item h3 {
   padding-bottom: 5px;
+}
+.goods-item:not(:first-child) {
+  margin-left: 15px;
 }/*# sourceMappingURL=style.css.map */
