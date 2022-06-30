@@ -22,7 +22,7 @@ header {
     display: flex;
     justify-content: end;
     align-items: center;
-    .cart-button {
+    .cart-button, .search-button {
         margin-right: 10px;
         background: $basic_color;
         padding: 5px 15px;
@@ -30,19 +30,26 @@ header {
         font-size: inherit;
         color: inherit;
     }
+    .cart-button {
+        background-color: #626060;
+        color: $basic_color;
+    }
+
+    .goods-search {
+        padding: 5px 15px;
+        margin-right: 5px; 
+    }
 }
 
 .goods-list {
     @extend %container;
-    display: grid;
-    grid-auto-flow: column;
-    gap: 15px;
-    justify-items: center;
+    display: flex;
+    justify-content: center;
 }
 
 .goods-item {
     background-color: $basic_color;
-    height: 200px;
+    height: 200px; 
     min-width: 200px;
     padding: 10px;
     border-radius: 4px;
@@ -52,6 +59,9 @@ header {
     justify-content: end;
     h3 {
         padding-bottom: 5px;
+    }
+    &:not(:first-child) {
+        margin-left: 15px;
     }
 }
 

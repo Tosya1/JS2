@@ -11,14 +11,8 @@ const GET_GOOG_ITEMS = 'https://raw.githubusercontent.com/GeekBrainsTutorial/onl
 const GOODS = `${GET_GOOG_ITEMS}/catalogData.json`;
 const GOODS_BASKET = `${GET_GOOG_ITEMS}/getBasket.json`;
 
-function service(url, callback) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    const loadHandler = () => {
-        callback(JSON.parse(xhr.response))
-    }
-    xhr.onload = loadHandler;
-    xhr.send();
+function service(url) {
+    return fetch(url).then((res) => res.json());
 }
 
 class GoodsItem {
@@ -39,19 +33,27 @@ class GoodsItem {
 
 class GoodsList {
     items = [];
-    fetchData(callback) {
-        service(GOODS, data => {
+    filteredItems = [];
+    fetchData() {
+        service(GOODS).then((data) => {
             this.items = data;
-            callback()
+            this.filteredItems = data;
+            return this.render();
         });
     }
 
+    filterItems(value) {
+        this.filteredItems = this.items.filter(({ product_name }) => {
+            return product_name.match(new RegExp(value, 'i'));
+        })
+    }
+
     calculatePrice() {
-        return this.items.reduce((acc, item) => acc + item.price, 0);
+        return this.items.reduce((acc, { price }) => acc + price, 0);
     }
 
     render() {
-        const goodsList = this.items.map(item => {
+        const goodsList = this.filteredItems.map(item => {
             const goodsItem = new GoodsItem(item);
             return goodsItem.render();
         })
@@ -61,26 +63,23 @@ class GoodsList {
 
 class BasketGoods {
     items = [];
-    fetchDataBasket(callback = () => {}) {
-        service(GOODS_BASKET, data => {
-            this.items = data;
-            callback()
+    fetchDataBasket(callback) {
+        service(GOODS_BASKET).then((data) => {
+            this.items = data.contents;
+            return callback();
         });
     }
 }
 
 const goodsList = new GoodsList();
-goodsList.fetchData(() => {
-    goodsList.render();
-});
-goodsList.fetchData(() => {
-    console.log(goodsList.calculatePrice());
-});
+goodsList.fetchData();
 
 const basketGoods = new BasketGoods();
-basketGoods.fetchDataBasket();
+basketGoods.fetchDataBasket(() =>
+    console.log(goodsList.calculatePrice.call(basketGoods)));
 
-
-
-
-
+document.querySelector('.search-button').addEventListener('click', () => {
+    const value = document.querySelector('.goods-search').value;
+    goodsList.filterItems(value);
+    goodsList.render();
+})
