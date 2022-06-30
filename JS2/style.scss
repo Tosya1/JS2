@@ -1,9 +1,7 @@
 @import "_null.scss"; // Обнуление стилей
-
 $basic_color: lightgrey;
 $basic_dark: darkgrey;
 $font_color: #323232;
-
 %container {
     padding: 0 calc(50% - 590px);
 }
@@ -22,7 +20,8 @@ header {
     display: flex;
     justify-content: end;
     align-items: center;
-    .cart-button, .search-button {
+    .cart-button,
+    .search-button {
         margin-right: 10px;
         background: $basic_color;
         padding: 5px 15px;
@@ -34,10 +33,9 @@ header {
         background-color: #626060;
         color: $basic_color;
     }
-
     .goods-search {
         padding: 5px 15px;
-        margin-right: 5px; 
+        margin-right: 5px;
     }
 }
 
@@ -49,7 +47,7 @@ header {
 
 .goods-item {
     background-color: $basic_color;
-    height: 200px; 
+    height: 200px;
     min-width: 200px;
     padding: 10px;
     border-radius: 4px;
@@ -65,3 +63,46 @@ header {
     }
 }
 
+.basket {
+    width: 70%;
+    height: 300px;
+    position: fixed;
+    border: 1px solid $basic_dark;
+    background: white;
+    top: 55px;
+    right: 15%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    .basket-header {
+        height: 40px;
+        background: $basic_dark;
+    }
+    .close-basket {
+        padding-right: 8px;
+        text-align: right;
+        font-size: 37px;
+        color: #626060;
+    }
+    .basket-body {
+        flex-grow: 1;
+    }
+    .basket-footer {
+        height: 50px;
+        background: $basic_color;
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+        font-size: 16px;
+        span {
+            font-weight: 600;
+            padding-left: 5px;
+        }
+    }
+}
+
+.no-data {
+    text-align: center;
+    font-size: 16px;
+
+}
