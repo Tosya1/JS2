@@ -15,28 +15,17 @@
     <div id="root">
         <header>
             <div class="search">
-                <input type="text" class="goods-search" v-model="search" />
+                <custom-input v-model="search"></custom-input>
                 <!--<button class=" search-button " type="button ">Искать</button>-->
             </div>
             <div class="actions ">
-                <button class="cart-button" type="button" @click="changeCartVisibility">Корзина</button>
-                <div class="basket" v-if="isVisibleCart">
-                    <div class="basket-header ">
-                        <div class="close-basket" @click="changeCartVisibility">
-                            <i class="fa-solid fa-xmark"></i>
-                        </div>
-                    </div>
-                    <div class="basket-body"></div>
-                    <div class="basket-footer">  Всего товаров на сумму  <span>{{ calculatePrice}}</span></div>
-                </div>
+                <custom-button @click="changeCartVisibility">Корзина</custom-button>
+                <basket v-if="isVisibleCart" @close="changeCartVisibility" :calculate-price="calculatePrice"></basket>
             </div>
         </header>
         <main>
             <div class="goods-list" v-if="filteredItems.length">
-                <div class=" goods-item " v-for="item in filteredItems">
-                    <h3>{{ item.product_name }}</h3>
-                    <p>{{ item.price }}</p>
-                </div>
+                <good v-for="item in filteredItems" :item="item"></good>
             </div>
             <div class="no-data" v-else>Нет данных</div>
         </main>
